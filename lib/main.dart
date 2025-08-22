@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_movie_info/presentation/pages/detail_page/detail_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,16 +22,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       themeMode: ThemeMode.dark, // 다크 모드 디폴트
-      home: const HomePage(),
+      home: DetailPage(),
     );
-  }
-}
-
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(body: Center(child: Text('Hello, World!')));
   }
 }
