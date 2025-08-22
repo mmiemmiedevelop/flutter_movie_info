@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_movie_info/presentation/pages/detail_page/detail_page.dart';
+import 'package:flutter_movie_info/presentation/pages/movie_list/movie_list.dart';
 
 void main() {
   runApp(const MyApp());
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       themeMode: ThemeMode.dark, // 다크 모드 디폴트
-      home: DetailPage(),
+      home: MovieListPage(),
     );
   }
 }

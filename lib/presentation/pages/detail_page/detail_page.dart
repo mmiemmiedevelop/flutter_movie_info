@@ -15,37 +15,46 @@ class DetailPage extends StatelessWidget {
         child: Column(
           children: [
             // 영화 포스터--------------------------------
-            ClipRRect(
-              child: Image.network(
-                'https://search.pstatic.net/common/?src=http%3A%2F%2Fcafefiles.naver.net%2F20160916_76%2Fguntoman2006_1473988661637CKXk4_JPEG%2Fmoana_ver5-1.jpg&type=sc960_832',
-                width: double.infinity,
-                height: 450,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    color: Colors.grey[800],
-                    child: const Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.image_not_supported,
-                            size: 48,
-                            color: Colors.white54,
-                          ),
-                          SizedBox(height: 8),
-                          Text(
-                            '이미지를 불러올 수 없습니다',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white70,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
+            Hero(
+              tag: 'popular_movie_hero',
+              child: ClipRRect(
+                child: Image.asset(
+                  'assets/moana.png',
+                  width: double.infinity,
+                  height: 450,
+                  fit: BoxFit.cover,
+                ),
+                // Image.network(
+                //   'assets/moana.png',
+                //   width: double.infinity,
+                //   height: 450,
+                //   fit: BoxFit.cover,
+                //   errorBuilder: (context, error, stackTrace) {
+                //     return Container(
+                //       color: Colors.grey[800],
+                //       child: const Center(
+                //         child: Column(
+                //           mainAxisAlignment: MainAxisAlignment.center,
+                //           children: [
+                //             Icon(
+                //               Icons.image_not_supported,
+                //               size: 48,
+                //               color: Colors.white54,
+                //             ),
+                //             SizedBox(height: 8),
+                //             Text(
+                //               '이미지를 불러올 수 없습니다',
+                //               style: TextStyle(
+                //                 fontSize: 16,
+                //                 color: Colors.white70,
+                //               ),
+                //             ),
+                //           ],
+                //         ),
+                //       ),
+                //     );
+                //   },
+                // ),
               ),
             ),
 
@@ -167,18 +176,9 @@ class DetailPage extends StatelessWidget {
                     child: ListView(
                       scrollDirection: Axis.horizontal,
                       children: [
-                        CompanyLogoCard(
-                          imageUrl:
-                              'https://search.pstatic.net/common/?src=http%3A%2F%2Fcafefiles.naver.net%2F20160916_76%2Fguntoman2006_1473988661637CKXk4_JPEG%2Fmoana_ver5-1.jpg&type=sc960_832',
-                        ),
-                        CompanyLogoCard(
-                          imageUrl:
-                              'https://search.pstatic.net/common/?src=http%3A%2F%2Fcafefiles.naver.net%2F20160916_76%2Fguntoman2006_1473988661637CKXk4_JPEG%2Fmoana_ver5-1.jpg&type=sc960_832',
-                        ),
-                        CompanyLogoCard(
-                          imageUrl:
-                              'https://search.pstatic.net/common/?src=http%3A%2F%2Fcafefiles.naver.net%2F20160916_76%2Fguntoman2006_1473988661637CKXk4_JPEG%2Fmoana_ver5-1.jpg&type=sc960_832',
-                        ),
+                        CompanyLogoCard(imageUrl: 'assets/moana.png'),
+                        CompanyLogoCard(imageUrl: 'assets/moana.png'),
+                        CompanyLogoCard(imageUrl: 'assets/moana.png'),
                       ],
                     ),
                   ),
