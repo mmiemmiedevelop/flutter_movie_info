@@ -92,13 +92,22 @@ class _MovieListPageState extends ConsumerState<MovieListPage> {
                       height: 500,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(16),
-                        image: DecorationImage(
-                          image: NetworkImage(
-                            state.popularMovies?[0].poster_path ?? '',
-                          ),
-                          fit: BoxFit.cover,
-                        ),
+                        image:
+                            state.popularMovies?.isNotEmpty == true &&
+                                state.popularMovies![0].poster_path.isNotEmpty
+                            ? DecorationImage(
+                                image: NetworkImage(
+                                  state.popularMovies![0].poster_path,
+                                ),
+                                fit: BoxFit.cover,
+                              )
+                            : null,
                       ),
+                      child:
+                          state.popularMovies?.isNotEmpty != true ||
+                              state.popularMovies![0].poster_path.isEmpty
+                          ? const Center(child: CircularProgressIndicator())
+                          : null,
                     ),
                   ),
                 ),
