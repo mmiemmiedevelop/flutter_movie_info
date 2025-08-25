@@ -20,43 +20,40 @@ class DetailPage extends StatelessWidget {
             Hero(
               tag: 'popular_movie_hero',
               child: ClipRRect(
-                child: Image.network(
-                  movie.poster_path,
-                  width: double.infinity,
-                  height: 450,
-                  fit: BoxFit.cover,
-                ),
-                // Image.network(
-                //   'assets/moana.png',
-                //   width: double.infinity,
-                //   height: 450,
-                //   fit: BoxFit.cover,
-                //   errorBuilder: (context, error, stackTrace) {
-                //     return Container(
-                //       color: Colors.grey[800],
-                //       child: const Center(
-                //         child: Column(
-                //           mainAxisAlignment: MainAxisAlignment.center,
-                //           children: [
-                //             Icon(
-                //               Icons.image_not_supported,
-                //               size: 48,
-                //               color: Colors.white54,
-                //             ),
-                //             SizedBox(height: 8),
-                //             Text(
-                //               '이미지를 불러올 수 없습니다',
-                //               style: TextStyle(
-                //                 fontSize: 16,
-                //                 color: Colors.white70,
-                //               ),
-                //             ),
-                //           ],
-                //         ),
-                //       ),
-                //     );
-                //   },
-                // ),
+                child: movie.poster_path.isNotEmpty
+                    ? Image.network(
+                        movie.poster_path,
+                        width: double.infinity,
+                        height: 450,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            width: double.infinity,
+                            height: 450,
+                            color: Colors.grey[800],
+                            child: const Center(
+                              child: Icon(
+                                Icons.image_not_supported,
+                                size: 48,
+                                color: Colors.white54,
+                              ),
+                            ),
+                          );
+                        },
+                      )
+                    // 영화 포스터 없을 때
+                    : Container(
+                        width: double.infinity,
+                        height: 450,
+                        color: Colors.grey[800],
+                        child: const Center(
+                          child: Icon(
+                            Icons.image_not_supported,
+                            size: 48,
+                            color: Colors.white54,
+                          ),
+                        ),
+                      ),
               ),
             ),
 
