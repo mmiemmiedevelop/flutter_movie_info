@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_movie_info/domain/entity/movie.dart';
 
 class HorizontalMovieList extends StatelessWidget {
-  final int count;
+  final List<Movie> movies;
   final bool showRanking;
 
   const HorizontalMovieList({
     super.key,
-    required this.count,
+    required this.movies,
     required this.showRanking,
   });
 
@@ -16,8 +17,9 @@ class HorizontalMovieList extends StatelessWidget {
       height: 180,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: count,
+        itemCount: movies.length,
         itemBuilder: (context, index) {
+          final movie = movies[index];
           return Container(
             width: showRanking ? 140 : 120,
             margin: showRanking
@@ -44,9 +46,27 @@ class HorizontalMovieList extends StatelessWidget {
                     ),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(12),
-                      child: const Center(
-                        child: Icon(Icons.movie, size: 40, color: Colors.white),
-                      ),
+                      child: movie.poster_path.isNotEmpty
+                          ? Image.network(
+                              movie.poster_path,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return const Center(
+                                  child: Icon(
+                                    Icons.movie,
+                                    size: 40,
+                                    color: Colors.white,
+                                  ),
+                                );
+                              },
+                            )
+                          : const Center(
+                              child: Icon(
+                                Icons.movie,
+                                size: 40,
+                                color: Colors.white,
+                              ),
+                            ),
                     ),
                   ),
                 ),

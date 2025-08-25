@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_movie_info/presentation/pages/detail_page/detail_page.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_movie_info/presentation/pages/movie_list/movie_list.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  await dotenv.load(fileName: ".env");
+  runApp(ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {

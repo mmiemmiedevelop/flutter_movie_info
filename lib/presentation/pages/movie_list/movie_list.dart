@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
-import '../../widgets/section_title.dart';
-import '../../widgets/horizontal_movie_list.dart';
-import '../detail_page/detail_page.dart';
+import 'package:flutter_movie_info/domain/entity/movie.dart';
+import 'package:flutter_movie_info/presentation/widgets/section_title.dart';
+import 'package:flutter_movie_info/presentation/widgets/horizontal_movie_list.dart';
+import 'package:flutter_movie_info/presentation/pages/detail_page/detail_page.dart';
+import 'package:flutter_movie_info/presentation/pages/movie_list/movie_list_view_model.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class MovieListPage extends StatelessWidget {
+class MovieListPage extends ConsumerWidget {
   const MovieListPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -74,27 +77,39 @@ class MovieListPage extends StatelessWidget {
               const SizedBox(height: 32),
 
               // 현재 상영중 섹션
+              const SizedBox(height: 32),
               const SectionTitle(title: '현재 상영중'),
               const SizedBox(height: 16),
-              const HorizontalMovieList(count: 20, showRanking: false),
+              Consumer(
+                builder: (context, ref, child) {
+                  final movies = ref.watch(movieListViewModelProvider);
+                  if (movies == null) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  return HorizontalMovieList(
+                    movies: movies,
+                    showRanking: false,
+                  );
+                },
+              ),
               const SizedBox(height: 32),
 
               // 인기순 섹션
               const SectionTitle(title: '인기순'),
               const SizedBox(height: 16),
-              const HorizontalMovieList(count: 20, showRanking: true),
+              const HorizontalMovieList(movies: [], showRanking: true),
               const SizedBox(height: 32),
 
               // 평점 높은순 섹션
               const SectionTitle(title: '평점 높은순'),
               const SizedBox(height: 16),
-              const HorizontalMovieList(count: 20, showRanking: false),
+              const HorizontalMovieList(movies: [], showRanking: false),
               const SizedBox(height: 32),
 
               // 개봉예정 섹션
               const SectionTitle(title: '개봉예정'),
               const SizedBox(height: 16),
-              const HorizontalMovieList(count: 20, showRanking: false),
+              const HorizontalMovieList(movies: [], showRanking: false),
               const SizedBox(height: 32),
             ],
           ),
