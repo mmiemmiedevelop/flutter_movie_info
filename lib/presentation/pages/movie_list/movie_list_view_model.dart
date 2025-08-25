@@ -1,11 +1,15 @@
 import 'package:flutter_movie_info/domain/entity/movie.dart';
-import 'package:flutter_movie_info/domain/usecase/fetch_movies_usecase.dart';
 import 'package:flutter_movie_info/config/api_config.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_movie_info/domain/repository/movie_repository.dart';
+import 'package:flutter_movie_info/data/repository/movie_repository_impl.dart';
 
 class MovieListViewModel extends Notifier<MovieListState> {
+  late MovieRepository _repository;// 직접 repository를 주입 받아서 사용
+
   @override
   MovieListState build() {
+    _repository = ref.read(movieRepositoryProvider);
     // build() 메서드에서는 초기 상태만 반환하고 API 호출은 하지 않음
     return const MovieListState();
   }
@@ -23,7 +27,7 @@ class MovieListViewModel extends Notifier<MovieListState> {
   Future<void> fetchNowPlayingMovies() async {
     state = state.copyWith(isLoading: true);
     try {
-      final movies = await ref.read(fetchMoviesUsecaseProvider).execute();
+      final movies = await _repository.fetchMovies();
       state = state.copyWith(
         nowPlayingMovies: movies,
         isLoading: false,
@@ -37,9 +41,7 @@ class MovieListViewModel extends Notifier<MovieListState> {
   Future<void> fetchPopularMovies() async {
     state = state.copyWith(isLoading: true);
     try {
-      final movies = await ref
-          .read(fetchMoviesUsecaseProvider)
-          .executeByEndpoint(ApiConfig.popular);
+      final movies = await _repository.fetchMoviesByEndpoint(ApiConfig.popular);
       state = state.copyWith(
         popularMovies: movies,
         popularCurrentPage: 1, // 현재 페이지 설정
@@ -53,7 +55,6 @@ class MovieListViewModel extends Notifier<MovieListState> {
 
   // Popular 영화의 다음 페이지를 불러오는 메서드 추가
   Future<void> loadMorePopularMovies() async {
-
     if (state.isLoadingMore) {
       return; // 이미 로딩 중이면 중복 요청 방지
     }
@@ -63,13 +64,10 @@ class MovieListViewModel extends Notifier<MovieListState> {
     try {
       final nextPage = (state.popularCurrentPage ?? 1) + 1;
 
-      final newMovies = await ref
-          .read(fetchMoviesUsecaseProvider)
-          .executeByEndpoint(
-            ApiConfig.popular,
-            queryParams: {'page': nextPage.toString()},
-          );
-
+      final newMovies = await _repository.fetchMoviesByEndpoint(
+        ApiConfig.popular,
+        queryParams: {'page': nextPage.toString()},
+      );
 
       // 기존 영화 목록에 새로운 영화들 추가
       final currentMovies = state.popularMovies ?? [];
@@ -81,7 +79,6 @@ class MovieListViewModel extends Notifier<MovieListState> {
         isLoadingMore: false,
         error: null,
       );
-
     } catch (e) {
       state = state.copyWith(isLoadingMore: false, error: e.toString());
     }
@@ -90,9 +87,9 @@ class MovieListViewModel extends Notifier<MovieListState> {
   Future<void> fetchTopRatedMovies() async {
     state = state.copyWith(isLoading: true);
     try {
-      final movies = await ref
-          .read(fetchMoviesUsecaseProvider)
-          .executeByEndpoint(ApiConfig.topRated);
+      final movies = await _repository.fetchMoviesByEndpoint(
+        ApiConfig.topRated,
+      );
       state = state.copyWith(
         topRatedMovies: movies,
         isLoading: false,
@@ -106,9 +103,9 @@ class MovieListViewModel extends Notifier<MovieListState> {
   Future<void> fetchUpcomingMovies() async {
     state = state.copyWith(isLoading: true);
     try {
-      final movies = await ref
-          .read(fetchMoviesUsecaseProvider)
-          .executeByEndpoint(ApiConfig.upcoming);
+      final movies = await _repository.fetchMoviesByEndpoint(
+        ApiConfig.upcoming,
+      );
       state = state.copyWith(
         upcomingMovies: movies,
         isLoading: false,
@@ -125,9 +122,10 @@ class MovieListViewModel extends Notifier<MovieListState> {
   }) async {
     state = state.copyWith(isLoading: true);
     try {
-      final movies = await ref
-          .read(fetchMoviesUsecaseProvider)
-          .executeByEndpoint(endpoint, queryParams: queryParams);
+      final movies = await _repository.fetchMoviesByEndpoint(
+        endpoint,
+        queryParams: queryParams,
+      );
       state = state.copyWith(
         customMovies: movies,
         isLoading: false,
