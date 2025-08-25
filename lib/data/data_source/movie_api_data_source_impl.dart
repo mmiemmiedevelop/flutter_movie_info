@@ -25,10 +25,6 @@ class MovieApiDataSourceImpl implements MovieDataSource {
           'accept': 'application/json',
         },
       );
-    //  print('0ApiConfig.baseUrl: ${ApiConfig.baseUrl}');
-   //   print('1ApiConfig.apiKey: ${ApiConfig.apiKey}');
-  //    print('2response: ${response.body}');
-
       if (response.statusCode == 200) {
         final jsonData = jsonDecode(response.body);
         final movieResponse = MovieResponseDto.fromJson(jsonData);
@@ -37,10 +33,8 @@ class MovieApiDataSourceImpl implements MovieDataSource {
       } else {
         throw Exception('영화 데이터를 불러오는데 실패했습니다: ${response.statusCode}');
       }
-    } catch (e, stackTrace) {
-   //   print('Error details: $e');
-   //   print('Stack trace: $stackTrace');
-      throw Exception('영화 데이터를 불러오는데 실패했습니다: ${e?.toString() ?? '알 수 없는 오류'}');
+    } catch (e) {
+      throw Exception('영화 데이터를 불러오는데 실패했습니다: ${e.toString()}');
     }
   }
 }
