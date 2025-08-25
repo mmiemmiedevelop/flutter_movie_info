@@ -24,18 +24,17 @@ class MovieApiDataSourceImpl implements MovieDataSource {
         throw Exception('API 키가 설정되지 않았습니다. .env 파일을 확인해주세요.');
       }
 
-      // 기본 쿼리 파라미터 설정
-      final defaultParams = {
+      final defaultParams = <String, String>{
         'language': ApiConfig.defaultLanguage,
         'page': ApiConfig.defaultPage.toString(),
       };
 
-      // 추가 쿼리 파라미터가 있으면 병합
       if (queryParams != null) {
-        defaultParams.addAll(queryParams as Map<String, String>);
+        queryParams.forEach((key, value) {
+          defaultParams[key] = value.toString();
+        });
       }
 
-      // URI 생성
       final uri = Uri.parse(
         '${ApiConfig.baseUrl}$endpoint',
       ).replace(queryParameters: defaultParams);

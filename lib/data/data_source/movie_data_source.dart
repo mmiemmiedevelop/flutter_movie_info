@@ -12,5 +12,5 @@ abstract class MovieDataSource {
 }
 
 final movieDataSourceProvider = Provider<MovieDataSource>((ref) {
-    return MovieApiDataSourceImpl(http.Client());
+  return MovieApiDataSourceImpl(http.Client());
 });

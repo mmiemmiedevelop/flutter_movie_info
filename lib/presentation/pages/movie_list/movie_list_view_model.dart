@@ -42,11 +42,48 @@ class MovieListViewModel extends Notifier<MovieListState> {
           .executeByEndpoint(ApiConfig.popular);
       state = state.copyWith(
         popularMovies: movies,
+        popularCurrentPage: 1, // 현재 페이지 설정
         isLoading: false,
         error: null,
       );
     } catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());
+    }
+  }
+
+  // Popular 영화의 다음 페이지를 불러오는 메서드 추가
+  Future<void> loadMorePopularMovies() async {
+
+    if (state.isLoadingMore) {
+      return; // 이미 로딩 중이면 중복 요청 방지
+    }
+
+    state = state.copyWith(isLoadingMore: true);
+
+    try {
+      final nextPage = (state.popularCurrentPage ?? 1) + 1;
+
+      final newMovies = await ref
+          .read(fetchMoviesUsecaseProvider)
+          .executeByEndpoint(
+            ApiConfig.popular,
+            queryParams: {'page': nextPage.toString()},
+          );
+
+
+      // 기존 영화 목록에 새로운 영화들 추가
+      final currentMovies = state.popularMovies ?? [];
+      final updatedMovies = [...currentMovies, ...newMovies];
+
+      state = state.copyWith(
+        popularMovies: updatedMovies,
+        popularCurrentPage: nextPage,
+        isLoadingMore: false,
+        error: null,
+      );
+
+    } catch (e) {
+      state = state.copyWith(isLoadingMore: false, error: e.toString());
     }
   }
 
@@ -66,7 +103,7 @@ class MovieListViewModel extends Notifier<MovieListState> {
     }
   }
 
-   Future<void> fetchUpcomingMovies() async {
+  Future<void> fetchUpcomingMovies() async {
     state = state.copyWith(isLoading: true);
     try {
       final movies = await ref
@@ -81,7 +118,6 @@ class MovieListViewModel extends Notifier<MovieListState> {
       state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
-
 
   Future<void> fetchMoviesByEndpoint(
     String endpoint, {
@@ -110,7 +146,9 @@ class MovieListState {
   final List<Movie>? topRatedMovies;
   final List<Movie>? customMovies;
   final List<Movie>? upcomingMovies;
+  final int? popularCurrentPage; // popular 영화 현재 페이지 추가
   final bool isLoading;
+  final bool isLoadingMore; // 추가 로딩 상태 추가
   final String? error;
 
   const MovieListState({
@@ -119,7 +157,9 @@ class MovieListState {
     this.topRatedMovies,
     this.customMovies,
     this.upcomingMovies,
+    this.popularCurrentPage,
     this.isLoading = false,
+    this.isLoadingMore = false,
     this.error,
   });
 
@@ -129,7 +169,9 @@ class MovieListState {
     List<Movie>? topRatedMovies,
     List<Movie>? customMovies,
     List<Movie>? upcomingMovies,
+    int? popularCurrentPage,
     bool? isLoading,
+    bool? isLoadingMore,
     String? error,
   }) {
     return MovieListState(
@@ -138,7 +180,9 @@ class MovieListState {
       topRatedMovies: topRatedMovies ?? this.topRatedMovies,
       customMovies: customMovies ?? this.customMovies,
       upcomingMovies: upcomingMovies ?? this.upcomingMovies,
+      popularCurrentPage: popularCurrentPage ?? this.popularCurrentPage,
       isLoading: isLoading ?? this.isLoading,
+      isLoadingMore: isLoadingMore ?? this.isLoadingMore,
       error: error ?? this.error,
     );
   }

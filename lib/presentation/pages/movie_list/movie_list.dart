@@ -126,6 +126,11 @@ class _MovieListPageState extends ConsumerState<MovieListPage> {
                 HorizontalMovieList(
                   movies: state.popularMovies ?? [],
                   showRanking: true,
+                  isPopular: true, // popular 영화임을 표시
+                  onLoadMore: () {
+                    // 스크롤 끝에 도달했을 때 다음 페이지 로드
+                    viewModel.loadMorePopularMovies();
+                  },
                   onTap: (movie) {
                     Navigator.of(context).push(
                       MaterialPageRoute(
