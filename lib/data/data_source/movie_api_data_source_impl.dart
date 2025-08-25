@@ -11,25 +11,49 @@ class MovieApiDataSourceImpl implements MovieDataSource {
 
   @override
   Future<List<MovieDto>> fetchMovies() async {
+    return fetchMoviesByEndpoint(ApiConfig.nowPlaying);
+  }
+
+  @override
+  Future<List<MovieDto>> fetchMoviesByEndpoint(
+    String endpoint, {
+    Map<String, dynamic>? queryParams,
+  }) async {
     try {
       if (!ApiConfig.isConfigured) {
         throw Exception('API 키가 설정되지 않았습니다. .env 파일을 확인해주세요.');
       }
 
+      // 기본 쿼리 파라미터 설정
+      final defaultParams = {
+        'language': ApiConfig.defaultLanguage,
+        'page': ApiConfig.defaultPage.toString(),
+      };
+
+      // 추가 쿼리 파라미터가 있으면 병합
+      if (queryParams != null) {
+        defaultParams.addAll(queryParams as Map<String, String>);
+      }
+
+      // URI 생성
+      final uri = Uri.parse(
+        '${ApiConfig.baseUrl}$endpoint',
+      ).replace(queryParameters: defaultParams);
+
       final response = await _client.get(
-        Uri.parse(
-          '${ApiConfig.baseUrl}/movie/now_playing?language=ko-KR&page=1',
-        ),
+        uri,
         headers: {
           'Authorization': 'Bearer ${ApiConfig.apiKey}',
           'accept': 'application/json',
         },
       );
+
       if (response.statusCode == 200) {
         final jsonData = jsonDecode(response.body);
         final movieResponse = MovieResponseDto.fromJson(jsonData);
-
-        return movieResponse.results.map((result) => MovieDto.fromJson(result.toJson())).toList();
+        return movieResponse.results
+            .map((result) => MovieDto.fromJson(result.toJson()))
+            .toList();
       } else {
         throw Exception('영화 데이터를 불러오는데 실패했습니다: ${response.statusCode}');
       }

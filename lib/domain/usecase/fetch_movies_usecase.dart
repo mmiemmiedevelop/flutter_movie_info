@@ -10,6 +10,16 @@ class FetchMoviesUsecase {
   Future<List<Movie>> execute() async {
     return await _movieRepository.fetchMovies();
   }
+
+  Future<List<Movie>> executeByEndpoint(
+    String endpoint, {
+    Map<String, dynamic>? queryParams,
+  }) async {
+    return await _movieRepository.fetchMoviesByEndpoint(
+      endpoint,
+      queryParams: queryParams,
+    );
+  }
 }
 
 // Provider 추가
