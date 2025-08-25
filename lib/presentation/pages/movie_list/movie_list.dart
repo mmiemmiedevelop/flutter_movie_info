@@ -73,16 +73,18 @@ class _MovieListPageState extends ConsumerState<MovieListPage> {
                 // 가장 인기있는 영화 섹션
                 const SectionTitle(title: '가장 인기있는'),
                 const SizedBox(height: 16),
-
                 GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const DetailPage(),
-                      ),
-                    );
-                  },
+                  onTap: (state.popularMovies?.isNotEmpty == true)
+                      ? () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  DetailPage(movie: state.popularMovies![0]),
+                            ),
+                          );
+                        }
+                      : null,
                   child: Hero(
                     tag: 'popular_movie_hero',
                     child: Container(
@@ -90,43 +92,16 @@ class _MovieListPageState extends ConsumerState<MovieListPage> {
                       height: 500,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(16),
-                        image: const DecorationImage(
-                          image: AssetImage('assets/moana.png'),
+                        image: DecorationImage(
+                          image: NetworkImage(
+                            state.popularMovies?[0].poster_path ?? '',
+                          ),
                           fit: BoxFit.cover,
-                        ),
-                      ),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16),
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              Colors.transparent,
-                              Colors.black.withValues(alpha: 0.7),
-                            ],
-                          ),
-                        ),
-                        child: const Align(
-                          alignment: Alignment.bottomLeft,
-                          child: Padding(
-                            padding: EdgeInsets.all(20),
-                            child: Text(
-                              'Moana 2',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
-
-                const SizedBox(height: 32),
 
                 // 현재 상영중 섹션
                 const SizedBox(height: 32),
@@ -135,6 +110,13 @@ class _MovieListPageState extends ConsumerState<MovieListPage> {
                 HorizontalMovieList(
                   movies: state.nowPlayingMovies ?? [],
                   showRanking: false,
+                  onTap: (movie) {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => DetailPage(movie: movie),
+                      ),
+                    );
+                  },
                 ),
                 const SizedBox(height: 32),
 
@@ -144,6 +126,13 @@ class _MovieListPageState extends ConsumerState<MovieListPage> {
                 HorizontalMovieList(
                   movies: state.popularMovies ?? [],
                   showRanking: true,
+                  onTap: (movie) {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => DetailPage(movie: movie),
+                      ),
+                    );
+                  },
                 ),
                 const SizedBox(height: 32),
 
@@ -153,6 +142,13 @@ class _MovieListPageState extends ConsumerState<MovieListPage> {
                 HorizontalMovieList(
                   movies: state.topRatedMovies ?? [],
                   showRanking: false,
+                  onTap: (movie) {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => DetailPage(movie: movie),
+                      ),
+                    );
+                  },
                 ),
                 const SizedBox(height: 32),
 
@@ -162,6 +158,13 @@ class _MovieListPageState extends ConsumerState<MovieListPage> {
                 HorizontalMovieList(
                   movies: state.upcomingMovies ?? [],
                   showRanking: false,
+                  onTap: (movie) {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => DetailPage(movie: movie),
+                      ),
+                    );
+                  },
                 ),
                 const SizedBox(height: 32),
               ],

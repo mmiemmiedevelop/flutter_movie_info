@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_movie_info/domain/entity/movie.dart';
 import '../../widgets/box_office_card.dart';
 import '../../widgets/company_logo_card.dart';
 import '../../widgets/genre_tags.dart';
 
 class DetailPage extends StatelessWidget {
-  const DetailPage({super.key});
+  final Movie movie;
+  const DetailPage({super.key, required this.movie});
 
   @override
   Widget build(BuildContext context) {
@@ -18,8 +20,8 @@ class DetailPage extends StatelessWidget {
             Hero(
               tag: 'popular_movie_hero',
               child: ClipRRect(
-                child: Image.asset(
-                  'assets/moana.png',
+                child: Image.network(
+                  movie.poster_path,
                   width: double.infinity,
                   height: 450,
                   fit: BoxFit.cover,

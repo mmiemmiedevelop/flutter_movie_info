@@ -12,6 +12,7 @@ class ApiConfig {
   static const String popular = '/movie/popular';
   static const String topRated = '/movie/top_rated';
   static const String upcoming = '/movie/upcoming';
+  static const String detail = '/movie/';
 
   // 기본 쿼리 파라미터
   static const String defaultLanguage = 'ko-KR';
