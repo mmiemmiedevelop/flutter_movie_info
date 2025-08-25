@@ -1,29 +1,65 @@
-// import 'dart:convert';
+import 'dart:convert';
 
-// import 'package:flutter_movie_info/data/dto/movie_dto.dart';
-// import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_movie_info/data/dto/movie_dto.dart';
+import 'package:flutter_test/flutter_test.dart';
 
-// void main() {
-//   test(
-//     'MovieDto : fromJson test',
-//     () {
-//       const sampleJsonString = """
-//   {
-//     "title": "Avatar",
-//     "released": "18 Dec 2009",
-//     "runtime": "162 min",
-//     "director": "James Cameron",
-//     "actors": "Sam Worthington, Zoe Saldana, Sigourney Weaver, Stephen Lang",
-//     "poster": "http://ia.media-imdb.com/images/M/MV5BMTYwOTEwNjAzMl5BMl5BanBnXkFtZTcwODc5MTUwMw@@._V1_SX300.jpg"
-//   }
-// """;
-//       final movie = MovieDto.fromJson(jsonDecode(sampleJsonString));
-//       expect(movie.title, "Avatar");
-//       expect(movie.released, "18 Dec 2009");
-//       expect(movie.runtime, "162 min");
-//       expect(movie.director, "James Cameron");
-//       expect(movie.actors, "Sam Worthington, Zoe Saldana, Sigourney Weaver, Stephen Lang");
-//       expect(movie.poster, "http://ia.media-imdb.com/images/M/MV5BMTYwOTEwNjAzMl5BMl5BanBnXkFtZTcwODc5MTUwMw@@._V1_SX300.jpg");
-//     },
-//   );
-// }
+void main() {
+  test('MovieDto : fromJson test', () {
+    // Given
+    const sampleJsonString = """
+  {
+    "title": "Avatar",
+    "poster_path": "/jRXYjXNq0Cs2TcJjLkki24MLp7u.jpg",
+    "id": 19995
+  }
+""";
+
+    // When
+    final movie = MovieDto.fromJson(jsonDecode(sampleJsonString));
+
+    // Then
+    expect(movie.title, "Avatar");
+    expect(movie.poster_path, "/jRXYjXNq0Cs2TcJjLkki24MLp7u.jpg");
+    expect(movie.id, 19995);
+  });
+
+  test('MovieDto : toJson test', () {
+    // Given
+    final movie = MovieDto(
+      title: "Avatar",
+      poster_path: "/jRXYjXNq0Cs2TcJjLkki24MLp7u.jpg",
+      id: 19995,
+    );
+
+    // When
+    final json = movie.toJson();
+
+    // Then
+    expect(json['title'], "Avatar");
+    expect(json['poster_path'], "/jRXYjXNq0Cs2TcJjLkki24MLp7u.jpg");
+    expect(json['id'], 19995);
+  });
+
+  test('MovieDto : copyWith test', () {
+    // Given
+    final originalMovie = MovieDto(
+      title: "Avatar",
+      poster_path: "/jRXYjXNq0Cs2TcJjLkki24MLp7u.jpg",
+      id: 19995,
+    );
+
+    // When
+    final updatedMovie = originalMovie.copyWith(
+      title: "Avatar: The Way of Water",
+      id: 76600,
+    );
+
+    // Then
+    expect(updatedMovie.title, "Avatar: The Way of Water");
+    expect(
+      updatedMovie.poster_path,
+      "/jRXYjXNq0Cs2TcJjLkki24MLp7u.jpg",
+    ); // 변경되지 않음
+    expect(updatedMovie.id, 76600);
+  });
+}
